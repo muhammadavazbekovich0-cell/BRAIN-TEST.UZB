@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="uz" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMART BRAIN GAMES — Intellektual O'yinlar Platformasi</title>
+    <link rel="stylesheet" href="./INDEX.CSS">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Notification Toast -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Header / Navbar -->
+    <header class="navbar glass">
+        <div class="container nav-content">
+            <div class="logo" onclick="app.navigate('home')">
+                <span class="logo-icon">🧠</span>
+                <span class="logo-text">SMART <span class="gradient-text">BRAIN</span> GAMES</span>
+            </div>
+
+            <nav class="nav-links" id="nav-links">
+                <button class="nav-btn active" data-view="home" data-i18n="nav_home">Bosh sahifa</button>
+                <button class="nav-btn" data-view="games" data-i18n="nav_games">O'yinlar (105)</button>
+                <button class="nav-btn" data-view="calculators" data-i18n="nav_calc">Kalkulyatorlar</button>
+                <button class="nav-btn" data-view="leaderboard" data-i18n="nav_leader">Reyting</button>
+            </nav>
+
+            <div class="nav-controls">
+                <!-- Language Switcher: UZB, RUS, USA -->
+                <div class="lang-switcher">
+                    <button class="lang-btn active" data-lang="uz">🇺🇿 UZB</button>
+                    <button class="lang-btn" data-lang="ru">🇷🇺 RUS</button>
+                    <button class="lang-btn" data-lang="en">🇺🇸 USA</button>
+                </div>
+
+                <!-- Audio & Theme Controls -->
+                <button id="sound-toggle" class="icon-btn" title="Ovoz">🔊</button>
+                <button id="music-toggle" class="icon-btn" title="Musiqa">🎵</button>
+                <button id="theme-toggle" class="icon-btn" title="Mavzu">☀️</button>
+
+                <!-- User Profile Pill -->
+                <div class="profile-pill" onclick="app.openProfileModal()">
+                    <span class="avatar" id="header-avatar">🚀</span>
+                    <div class="profile-meta">
+                        <span id="header-username">Player</span>
+                        <small>LVL <span id="header-level">1</span> • <span id="header-xp">0</span> XP</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main id="main-content">
+        <!-- HOME & GAMES VIEW -->
+        <section id="view-home" class="view active">
+            <!-- Hero Section -->
+            <div class="hero">
+                <div class="container hero-grid">
+                    <div class="hero-text">
+                        <div class="badge" data-i18n="hero_badge">⚡ 105+ Interaktiv Intellektual O'yinlar</div>
+                        <h1 class="hero-title" data-i18n="hero_title">Miyangni rivojlantir, kelajagingni yarat!</h1>
+                        <p class="hero-subtitle" data-i18n="hero_desc">
+                            Matematika, virtual trading, tillar, fanlar, xotira va reaksiyani rivojlantiruvchi zamonaviy ta'limiy platforma.
+                        </p>
+                        <div class="hero-actions">
+                            <button class="btn btn-primary btn-lg" onclick="app.scrollToGames()" data-i18n="btn_start">🚀 Boshlash</button>
+                            <button class="btn btn-secondary btn-lg" onclick="app.startRandomGame()" data-i18n="btn_random">🎲 Tasodifiy o'yin</button>
+                            <button class="btn btn-accent btn-lg" onclick="app.startDailyChallenge()" data-i18n="btn_daily">🔥 Kunlik Challenge</button>
+                        </div>
+                    </div>
+
+                    <!-- User Quick Dashboard -->
+                    <div class="hero-stats glass card-3d">
+                        <h3 data-i18n="stats_title">📊 Sizning Statistikangiz</h3>
+                        <div class="stats-grid">
+                            <div class="stat-box">
+                                <span class="stat-val" id="stat-played">0</span>
+                                <span class="stat-label" data-i18n="stat_played">O'ynalgan</span>
+                            </div>
+                            <div class="stat-box">
+                                <span class="stat-val" id="stat-score">0</span>
+                                <span class="stat-label" data-i18n="stat_score">Umumiy ball</span>
+                            </div>
+                            <div class="stat-box">
+                                <span class="stat-val" id="stat-streak">1 🔥</span>
+                                <span class="stat-label" data-i18n="stat_streak">Kunlik streak</span>
+                            </div>
+                            <div class="stat-box">
+                                <span class="stat-val" id="stat-achievements">0/8</span>
+                                <span class="stat-label" data-i18n="stat_ach">Yutuqlar</span>
+                            </div>
+                        </div>
+                        <div class="xp-bar-wrapper">
+                            <div class="xp-info">
+                                <span data-i18n="next_level">Keyingi darajagacha:</span>
+                                <span id="xp-progress-text">0 / 500 XP</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="xp-progress-fill" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Age Categories Selector -->
+            <div class="container section" id="games-section">
+                <div class="section-header">
+                    <h2 data-i18n="age_title">🎯 Yosh Kategoriyasini Tanlang</h2>
+                    <p data-i18n="age_subtitle">Yoshga mos qiyinchilik darajasi va maxsus o'yinlar avtomatik tanlanadi</p>
+                </div>
+                <div class="age-grid" id="age-categories">
+                    <button class="age-card active" data-age="all">
+                        <span class="age-emoji">🌟</span>
+                        <strong data-i18n="age_all">Barcha yoshlar</strong>
+                        <small>105 o'yin</small>
+                    </button>
+                    <button class="age-card" data-age="5-7">
+                        <span class="age-emoji">🧸</span>
+                        <strong data-i18n="age_5_7">5–7 yosh</strong>
+                        <small data-i18n="age_5_7_sub">Kichkintoylar</small>
+                    </button>
+                    <button class="age-card" data-age="8-10">
+                        <span class="age-emoji">🚀</span>
+                        <strong data-i18n="age_8_10">8–10 yosh</strong>
+                        <small data-i18n="age_8_10_sub">Yosh iqtidorlar</small>
+                    </button>
+                    <button class="age-card" data-age="11-13">
+                        <span class="age-emoji">🔬</span>
+                        <strong data-i18n="age_11_13">11–13 yosh</strong>
+                        <small data-i18n="age_11_13_sub">Bilimdonlar</small>
+                    </button>
+                    <button class="age-card" data-age="14-18">
+                        <span class="age-emoji">💻</span>
+                        <strong data-i18n="age_14_18">14–18 yosh</strong>
+                        <small data-i18n="age_14_18_sub">Yosh mutaxassislar</small>
+                    </button>
+                    <button class="age-card" data-age="19+">
+                        <span class="age-emoji">📈</span>
+                        <strong data-i18n="age_19_plus">19+ yosh</strong>
+                        <small data-i18n="age_19_plus_sub">Kattalar va PRO</small>
+                    </button>
+                </div>
+
+                <!-- Search, Difficulty & Category Filters -->
+                <div class="filter-bar glass">
+                    <div class="search-box">
+                        <span>🔍</span>
+                        <input type="text" id="global-search" data-i18n-placeholder="search_placeholder" placeholder="O'yin nomini qidiring...">
+                    </div>
+                    <select id="difficulty-filter" class="select-input">
+                        <option value="all" data-i18n="diff_all">Barcha darajalar</option>
+                        <option value="easy" data-i18n="diff_easy">Oson</option>
+                        <option value="medium" data-i18n="diff_medium">O'rta</option>
+                        <option value="hard" data-i18n="diff_hard">Qiyin</option>
+                    </select>
+                    <button id="fav-filter-btn" class="btn btn-outline">❤️ <span data-i18n="favorites">Sevimlilar</span></button>
+                </div>
+
+                <!-- 7 Core Domains Tabs -->
+                <div class="category-tabs" id="category-tabs">
+                    <button class="cat-tab active" data-cat="all" data-i18n="cat_all">🌐 Barchasi (105)</button>
+                    <button class="cat-tab" data-cat="math" data-i18n="cat_math">➗ Matematika (15)</button>
+                    <button class="cat-tab" data-cat="trading" data-i18n="cat_trading">📊 Trading & Moliya (15)</button>
+                    <button class="cat-tab" data-cat="lang" data-i18n="cat_lang">🌍 Tillar (15)</button>
+                    <button class="cat-tab" data-cat="science" data-i18n="cat_science">🧬 Fanlar (15)</button>
+                    <button class="cat-tab" data-cat="vision" data-i18n="cat_vision">👁️ Ko'z & Reaksiya (15)</button>
+                    <button class="cat-tab" data-cat="motor" data-i18n="cat_motor">🎯 Qo'l motorikasi (15)</button>
+                    <button class="cat-tab" data-cat="brain" data-i18n="cat_brain">🧩 Miyya & Xotira (15)</button>
+                </div>
+
+                <!-- Games Counter -->
+                <div class="results-info">
+                    <span id="games-count-label">Ko'rsatilmoqda: 105 ta o'yin</span>
+                    <span class="safety-note" data-i18n="safety_disclaimer">🛡️ Xavfsiz muhit • Virtual ballar • Ko'z mashqlarida tanaffus qiling</span>
+                </div>
+
+                <!-- Games Grid -->
+                <div class="games-grid" id="games-grid"></div>
+            </div>
+        </section>
+
+        <!-- CALCULATORS VIEW -->
+        <section id="view-calculators" class="view">
+            <div class="container section">
+                <div class="section-header">
+                    <h2 data-i18n="calc_hub_title">🧮 Professional Kalkulyatorlar Markazi</h2>
+                    <p data-i18n="calc_hub_desc">Moliyaviy, ilmiy, trading va kundalik aniq hisob-kitoblar</p>
+                </div>
+                <div class="calc-layout">
+                    <div class="calc-sidebar glass" id="calc-menu"></div>
+                    <div class="calc-workspace glass" id="calc-workspace"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- LEADERBOARD VIEW -->
+        <section id="view-leaderboard" class="view">
+            <div class="container section">
+                <div class="section-header">
+                    <h2 data-i18n="leader_title">🏆 Global Reyting va Yutuqlar</h2>
+                    <p data-i18n="leader_desc">Eng faol intellektual o'yinchilar jadvali</p>
+                </div>
+                <div class="leaderboard-grid">
+                    <div class="glass card-pad">
+                        <h3 data-i18n="top_players">Top O'yinchilar</h3>
+                        <table class="leader-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th data-i18n="th_player">O'yinchi</th>
+                                    <th data-i18n="th_level">Daraja</th>
+                                    <th data-i18n="th_xp">XP Ball</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leaderboard-body"></tbody>
+                        </table>
+                    </div>
+                    <div class="glass card-pad">
+                        <h3 data-i18n="ach_title">🎖️ Yutuqlar (Achievements)</h3>
+                        <div id="achievements-list" class="achievements-grid"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- GAME ARENA MODAL -->
+    <div id="game-modal" class="modal">
+        <div class="modal-content game-arena glass" id="game-arena-box">
+            <div class="arena-header">
+                <div class="arena-title-group">
+                    <span id="arena-icon" class="arena-icon">🎮</span>
+                    <div>
+                        <h3 id="arena-title">Game Title</h3>
+                        <span id="arena-badge" class="badge-sm">Category</span>
+                    </div>
+                </div>
+                <div class="arena-hud">
+                    <div class="hud-item">⏱️ <span id="hud-timer">60</span>s</div>
+                    <div class="hud-item">⭐ <span id="hud-score">0</span></div>
+                    <div class="hud-item">❤️ <span id="hud-lives">3</span></div>
+                    <button class="icon-btn" onclick="app.toggleFullscreen()" title="To'liq ekran">⛶</button>
+                    <button class="icon-btn close-btn" onclick="app.closeGame()">✖</button>
+                </div>
+            </div>
+
+            <!-- Dynamic Game Body -->
+            <div id="arena-body" class="arena-body"></div>
+
+            <!-- Risk / Health Disclaimer Footer -->
+            <div class="arena-footer" id="arena-footer"></div>
+        </div>
+    </div>
+
+    <!-- PROFILE & HISTORY MODAL -->
+    <div id="profile-modal" class="modal">
+        <div class="modal-content profile-box glass">
+            <div class="modal-top">
+                <h2 data-i18n="profile_title">👤 Foydalanuvchi Profili</h2>
+                <button class="icon-btn close-btn" onclick="app.closeProfileModal()">✖</button>
+            </div>
+            <div class="profile-form">
+                <div class="avatar-selector" id="avatar-selector">
+                    <button class="av-opt active" data-av="🚀">🚀</button>
+                    <button class="av-opt" data-av="🧠">🧠</button>
+                    <button class="av-opt" data-av="🦊">🦊</button>
+                    <button class="av-opt" data-av="🤖">🤖</button>
+                    <button class="av-opt" data-av="👑">👑</button>
+                    <button class="av-opt" data-av="🦄">🦄</button>
+                </div>
+                <div class="form-row">
+                    <label data-i18n="lbl_name">Ismingiz:</label>
+                    <input type="text" id="prof-name-input" class="text-input" maxlength="20">
+                </div>
+                <div class="form-row">
+                    <label data-i18n="lbl_age">Yoshingiz:</label>
+                    <select id="prof-age-input" class="select-input">
+                        <option value="5-7">5–7 yosh</option>
+                        <option value="8-10">8–10 yosh</option>
+                        <option value="11-13">11–13 yosh</option>
+                        <option value="14-18">14–18 yosh</option>
+                        <option value="19+">19+ yosh</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" onclick="app.saveProfile()" data-i18n="btn_save">💾 Saqlash</button>
+            </div>
+
+            <div class="history-section">
+                <h4 data-i18n="history_title">📜 So'nggi o'yinlar tarixi</h4>
+                <div id="game-history-list" class="history-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <div>
+                <strong>SMART BRAIN GAMES</strong> — <span data-i18n="footer_rights">Ta'limiy va intellektual rivojlanish platformasi.</span>
+            </div>
+            <div class="footer-note" data-i18n="footer_disclaimer">
+                * Barcha trading simulyatorlari faqat virtual valyutada ishlaydi. Ko'z mashqlari tibbiy davolash o'rnini bosmaydi.
+            </div>
+        </div>
+    </footer>
+
+    <script src="./INDEX.JS"></script>
+</body>
+</html>
